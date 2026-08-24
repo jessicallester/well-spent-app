@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Well Spent</title>
+<meta name="theme-color" content="#C1592E">
+<meta name="description" content="How much do I have left to spend before payday?">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Well Spent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="phone">
+
+  <div class="brandbar">
+    <svg width="26" height="26" viewBox="0 0 110 110" aria-hidden="true">
+      <g stroke="#1B3A5C" stroke-width="4" stroke-linecap="round" fill="none">
+        <line x1="55" y1="11" x2="55" y2="31"/>
+        <line x1="55" y1="11" x2="55" y2="31" transform="rotate(45 55 55)"/>
+        <line x1="55" y1="11" x2="55" y2="31" transform="rotate(90 55 55)"/>
+        <line x1="55" y1="11" x2="55" y2="31" transform="rotate(135 55 55)"/>
+        <line x1="55" y1="11" x2="55" y2="31" transform="rotate(180 55 55)"/>
+        <line x1="55" y1="11" x2="55" y2="31" transform="rotate(225 55 55)"/>
+        <line x1="55" y1="11" x2="55" y2="31" transform="rotate(270 55 55)"/>
+        <line x1="55" y1="11" x2="55" y2="31" transform="rotate(315 55 55)"/>
+      </g>
+      <circle cx="55" cy="55" r="18" fill="#C1592E"/>
+    </svg>
+    <span>well spent</span>
+    <button id="installBtn" class="installbtn" style="display:none">Install</button>
+  </div>
+
+  <div class="top">
+    <div class="eyebrow" id="eyebrow">Variable Spend Left</div>
+    <div id="hero">$0</div>
+    <div id="days">—</div>
+    <div id="bar"><div id="barfill"></div></div>
+    <div id="progress">—</div>
+  </div>
+
+  <div class="btnrow">
+    <button class="primary" onclick="openEntry('spend')">+ Add Spend</button>
+    <button class="secondary" onclick="openEntry('money_in')">+ Add Money</button>
+  </div>
+
+  <div class="listzone">
+    <div id="listwrap">
+      <div class="listhead">
+        <div class="t">Recent</div>
+        <div class="c" id="count"></div>
+      </div>
+      <div id="list"></div>
+    </div>
+    <div id="fade"></div>
+  </div>
+
+  <div class="foot">
+    <button id="resetBtn" onclick="openWin()">Start a new period</button>
+  </div>
+
+  <!-- Add / edit entry -->
+  <div class="sheet" id="entrySheet">
+    <h2 id="entryTitle">Add spend</h2>
+    <label>Amount</label>
+    <input class="big" id="amt" type="text" inputmode="decimal" placeholder="0.00">
+    <label>What was it?</label>
+    <input id="desc" type="text" placeholder="Optional" autocomplete="off">
+    <div class="chips" id="chips"></div>
+    <button class="primary" style="width:100%" onclick="saveEntry()">Save</button>
+    <button class="link danger" id="delBtn" onclick="deleteEntry()" style="display:none">Delete this entry</button>
+    <button class="link" id="entryCancelBtn" onclick="closeSheets()">Cancel</button>
+  </div>
+
+  <!-- Win -->
+  <div class="sheet" id="winSheet">
+    <div id="winwrap">
+      <div id="winline">You finished with</div>
+      <div id="winnum">$0</div>
+      <div id="winsub"></div>
+    </div>
+    <div class="winfoot">
+      <button class="primary" style="width:100%" onclick="openSetup()">Start new period</button>
+      <button class="link" onclick="closeSheets()">Not yet</button>
+    </div>
+  </div>
+
+  <!-- Setup -->
+  <div class="sheet" id="setupSheet">
+    <h2 id="setupTitle">New pay period</h2>
+    <label>How much can you spend?</label>
+    <input class="big" id="startAmt" type="text" inputmode="decimal" placeholder="450">
+    <label>Next payday</label>
+    <input id="payday" type="date">
+    <button class="primary" style="width:100%" onclick="startPeriod()">Start</button>
+    <div class="note" id="setupNote">This clears everything from the last period.</div>
+    <button class="link" id="setupCancelBtn" onclick="closeSheets()">Cancel</button>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
