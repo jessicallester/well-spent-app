@@ -1,4 +1,4 @@
-const CACHE_NAME = 'well-spent-v1';
+const CACHE_NAME = 'well-spent-v2';
 const APP_SHELL = [
   './',
   './index.html',
@@ -32,10 +32,17 @@ self.addEventListener('activate', function (event) {
   self.clients.claim();
 });
 
+// Network-first: always try to fetch the latest version, only falling
+// back to the cache when offline. Keeps the installed app in sync with
+// whatever is actually deployed instead of freezing on the first load.
 self.addEventListener('fetch', function (event) {
   event.respondWith(
-    caches.match(event.request).then(function (cached) {
-      return cached || fetch(event.request);
+    fetch(event.request).then(function (response) {
+      var copy = response.clone();
+      caches.open(CACHE_NAME).then(function (cache) { cache.put(event.request, copy); });
+      return response;
+    }).catch(function () {
+      return caches.match(event.request);
     })
   );
 });
