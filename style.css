@@ -127,6 +127,7 @@ input.big{
 #welcomewrap{text-align:center;margin:auto 0}
 .welcomemark{width:64px;height:64px;margin-bottom:14px}
 #welcomeTitle{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:30px;color:var(--clay);margin-top:10px}
+#welcomewrap .eyebrow{margin-top:10px}
 #welcomeBody{font-size:16px;color:var(--cocoa);line-height:1.6;margin-top:14px;padding:0 6px}
 
 /* ---------- celebration screen ---------- */
