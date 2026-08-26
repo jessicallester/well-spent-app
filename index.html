@@ -21,8 +21,9 @@
 
 <div id="phone">
 
+  <!-- Brand header: persistent chrome, sits above every screen below -->
   <div class="brandbar">
-    <svg width="26" height="26" viewBox="0 0 110 110" aria-hidden="true">
+    <svg class="mark" viewBox="0 0 110 110" aria-hidden="true">
       <g stroke="#1B3A5C" stroke-width="4" stroke-linecap="round" fill="none">
         <line x1="55" y1="11" x2="55" y2="31"/>
         <line x1="55" y1="11" x2="55" y2="31" transform="rotate(45 55 55)"/>
@@ -39,70 +40,109 @@
     <button id="installBtn" class="installbtn" style="display:none">Install</button>
   </div>
 
-  <div class="top">
-    <div class="eyebrow" id="eyebrow">Variable Spend Left</div>
-    <div id="hero">$0</div>
-    <div id="days">—</div>
-    <div id="bar"><div id="barfill"></div></div>
-    <div id="progress">—</div>
-  </div>
+  <div id="screens">
 
-  <div class="btnrow">
-    <button class="primary" onclick="openEntry('spend')">+ Add Spend</button>
-    <button class="secondary" onclick="openEntry('money_in')">+ Add Money</button>
-  </div>
+    <div class="top">
+      <div class="eyebrow" id="eyebrow">Variable Spend Left</div>
+      <div id="hero">$0</div>
+      <div id="days">—</div>
+      <div id="bar"><div id="barfill"></div></div>
+      <div id="progress">—</div>
+    </div>
 
-  <div class="listzone">
-    <div id="listwrap">
-      <div class="listhead">
-        <div class="t">Recent</div>
-        <div class="c" id="count"></div>
+    <div class="btnrow">
+      <button class="primary" onclick="openEntry('spend')">+ Add Spend</button>
+      <button class="secondary" onclick="openEntry('money_in')">+ Add Money</button>
+    </div>
+
+    <div class="listzone">
+      <div id="listwrap">
+        <div class="listhead">
+          <div class="t">Recent</div>
+          <div class="c" id="count"></div>
+        </div>
+        <div id="list"></div>
       </div>
-      <div id="list"></div>
+      <div id="fade"></div>
     </div>
-    <div id="fade"></div>
-  </div>
 
-  <div class="foot">
-    <button id="resetBtn" onclick="openWin()">Start a new period</button>
-  </div>
-
-  <!-- Add / edit entry -->
-  <div class="sheet" id="entrySheet">
-    <h2 id="entryTitle">Add spend</h2>
-    <label>Amount</label>
-    <input class="big" id="amt" type="text" inputmode="decimal" placeholder="0.00">
-    <label>What was it?</label>
-    <input id="desc" type="text" placeholder="Optional" autocomplete="off">
-    <div class="chips" id="chips"></div>
-    <button class="primary" style="width:100%" onclick="saveEntry()">Save</button>
-    <button class="link danger" id="delBtn" onclick="deleteEntry()" style="display:none">Delete this entry</button>
-    <button class="link" id="entryCancelBtn" onclick="closeSheets()">Cancel</button>
-  </div>
-
-  <!-- Win -->
-  <div class="sheet" id="winSheet">
-    <div id="winwrap">
-      <div id="winline">You finished with</div>
-      <div id="winnum">$0</div>
-      <div id="winsub"></div>
+    <div class="foot">
+      <button id="resetBtn" onclick="openWin()">Start a new period</button>
     </div>
-    <div class="winfoot">
-      <button class="primary" style="width:100%" onclick="openSetup()">Start new period</button>
-      <button class="link" onclick="closeSheets()">Not yet</button>
-    </div>
-  </div>
 
-  <!-- Setup -->
-  <div class="sheet" id="setupSheet">
-    <h2 id="setupTitle">New pay period</h2>
-    <label>How much can you spend?</label>
-    <input class="big" id="startAmt" type="text" inputmode="decimal" placeholder="450">
-    <label>Next payday</label>
-    <input id="payday" type="date">
-    <button class="primary" style="width:100%" onclick="startPeriod()">Start</button>
-    <div class="note" id="setupNote">This clears everything from the last period.</div>
-    <button class="link" id="setupCancelBtn" onclick="closeSheets()">Cancel</button>
+    <!-- Welcome (very first open) -->
+    <div class="sheet" id="welcomeSheet">
+      <div id="welcomewrap">
+        <svg class="welcomemark" viewBox="0 0 110 110" aria-hidden="true">
+          <g stroke="#1B3A5C" stroke-width="4" stroke-linecap="round" fill="none">
+            <line x1="55" y1="11" x2="55" y2="31"/>
+            <line x1="55" y1="11" x2="55" y2="31" transform="rotate(45 55 55)"/>
+            <line x1="55" y1="11" x2="55" y2="31" transform="rotate(90 55 55)"/>
+            <line x1="55" y1="11" x2="55" y2="31" transform="rotate(135 55 55)"/>
+            <line x1="55" y1="11" x2="55" y2="31" transform="rotate(180 55 55)"/>
+            <line x1="55" y1="11" x2="55" y2="31" transform="rotate(225 55 55)"/>
+            <line x1="55" y1="11" x2="55" y2="31" transform="rotate(270 55 55)"/>
+            <line x1="55" y1="11" x2="55" y2="31" transform="rotate(315 55 55)"/>
+          </g>
+          <circle cx="55" cy="55" r="18" fill="#C1592E"/>
+        </svg>
+        <div class="eyebrow">Variable Spend Tracker</div>
+        <h1 id="welcomeTitle">Welcome to Well Spent</h1>
+        <p id="welcomeBody">See exactly how much you have left to spend before your next payday. No budgets, no categories — just the number that matters.</p>
+      </div>
+      <div class="winfoot">
+        <button class="primary" style="width:100%" onclick="openSetup(true)">Get Started</button>
+      </div>
+    </div>
+
+    <!-- Add / edit entry -->
+    <div class="sheet" id="entrySheet">
+      <h2 id="entryTitle">Add spend</h2>
+      <label>Amount</label>
+      <input class="big" id="amt" type="text" inputmode="decimal" placeholder="0.00">
+      <label>On what?</label>
+      <input id="desc" type="text" placeholder="Optional" autocomplete="off">
+      <div class="chipsLabel" id="chipsLabel">Recent purchases</div>
+      <div class="chips" id="chips"></div>
+      <button class="primary" style="width:100%" onclick="saveEntry()">Save</button>
+      <button class="link danger" id="delBtn" onclick="deleteEntry()" style="display:none">Delete this entry</button>
+      <button class="link" id="entryCancelBtn" onclick="closeSheets()">Cancel</button>
+    </div>
+
+    <!-- Win -->
+    <div class="sheet" id="winSheet">
+      <div id="winwrap">
+        <div id="winline">You finished with</div>
+        <div id="winnum">$0</div>
+        <div id="winsub"></div>
+      </div>
+      <div class="winfoot">
+        <button class="primary" style="width:100%" onclick="openSetup()">Start new period</button>
+        <button class="link" onclick="closeSheets()">Not yet</button>
+      </div>
+    </div>
+
+    <!-- New-period celebration -->
+    <div class="sheet" id="celebrateSheet">
+      <div id="confettiLayer"></div>
+      <div id="celebrateWrap">
+        <div id="celebrateLine">You got paid!</div>
+        <div id="celebrateSub">Spend it well.</div>
+      </div>
+    </div>
+
+    <!-- Setup -->
+    <div class="sheet" id="setupSheet">
+      <h2 id="setupTitle">New pay period</h2>
+      <label>How much can you spend?</label>
+      <input class="big" id="startAmt" type="text" inputmode="decimal" placeholder="450">
+      <label>Next payday</label>
+      <input id="payday" type="date">
+      <button class="primary" style="width:100%" onclick="startPeriod()">Start</button>
+      <div class="note" id="setupNote">This clears everything from the last period.</div>
+      <button class="link" id="setupCancelBtn" onclick="closeSheets()">Cancel</button>
+    </div>
+
   </div>
 
 </div>

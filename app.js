@@ -118,10 +118,15 @@ function render() {
 
 // ---- Sheets ----
 function closeSheets() {
-  ['entrySheet', 'winSheet', 'setupSheet'].forEach(function (id) {
+  ['welcomeSheet', 'entrySheet', 'winSheet', 'celebrateSheet', 'setupSheet'].forEach(function (id) {
     document.getElementById(id).classList.remove('show');
   });
   editing = null;
+}
+
+function openWelcome() {
+  closeSheets();
+  document.getElementById('welcomeSheet').classList.add('show');
 }
 
 function openEntry(type, id) {
@@ -147,8 +152,11 @@ function openEntry(type, id) {
     }
   }
 
-  document.getElementById('chips').innerHTML = state.merchantMemory.slice(0, 5).map(function (m) {
-    return '<div class="chip" onclick="document.getElementById(\'desc\').value=' + JSON.stringify(m) + '">' + m + '</div>';
+  var recent = state.merchantMemory.slice(0, 5);
+  document.getElementById('chipsLabel').style.display = recent.length ? 'block' : 'none';
+  document.getElementById('chips').innerHTML = recent.map(function (m) {
+    var safe = m.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    return '<div class="chip" data-name="' + safe + '">' + safe + '</div>';
   }).join('');
 
   document.getElementById('entrySheet').classList.add('show');
@@ -237,6 +245,7 @@ function startPeriod() {
     document.getElementById('startAmt').style.borderColor = 'var(--brick)';
     return;
   }
+  var isFirstRun = !state.currentPeriod;
   var payday = document.getElementById('payday').value || addDays(14);
   state.currentPeriod = {
     startingAmount: v,
@@ -246,12 +255,66 @@ function startPeriod() {
   };
   state.lastStartingAmount = v;
   save();
-  closeSheets();
-  render();
+  if (isFirstRun) {
+    closeSheets();
+    render();
+  } else {
+    celebrateNewPeriod();
+  }
 }
 
-document.getElementById('amt').addEventListener('input', function () { this.style.borderColor = ''; });
-document.getElementById('startAmt').addEventListener('input', function () { this.style.borderColor = ''; });
+// ---- New-period celebration ----
+function spawnConfetti() {
+  var layer = document.getElementById('confettiLayer');
+  layer.innerHTML = '';
+  var colors = ['#C1592E', '#1B3A5C', '#EFB79A', '#4A6B4F', '#8C2F1F'];
+  for (var i = 0; i < 28; i++) {
+    var p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.background = colors[i % colors.length];
+    p.style.animationDuration = (1.1 + Math.random() * 0.9) + 's';
+    p.style.animationDelay = (Math.random() * 0.3) + 's';
+    p.style.transform = 'rotate(' + Math.floor(Math.random() * 360) + 'deg)';
+    layer.appendChild(p);
+  }
+}
+
+function celebrateNewPeriod() {
+  closeSheets();
+  spawnConfetti();
+  document.getElementById('celebrateSheet').classList.add('show');
+  setTimeout(function () {
+    closeSheets();
+    render();
+  }, 1800);
+}
+
+// ---- Amount inputs: digits and at most one decimal point ----
+function sanitizeAmountInput(el) {
+  var v = el.value.replace(/[^0-9.]/g, '');
+  var firstDot = v.indexOf('.');
+  if (firstDot !== -1) {
+    v = v.slice(0, firstDot + 1) + v.slice(firstDot + 1).replace(/\./g, '');
+  }
+  el.value = v;
+}
+
+function bindAmountInput(el) {
+  el.addEventListener('input', function () {
+    this.style.borderColor = '';
+    sanitizeAmountInput(this);
+  });
+}
+
+bindAmountInput(document.getElementById('amt'));
+bindAmountInput(document.getElementById('startAmt'));
+
+document.getElementById('chips').addEventListener('click', function (e) {
+  var chip = e.target.closest('.chip');
+  if (!chip) return;
+  document.getElementById('desc').value = chip.getAttribute('data-name');
+});
 
 // ---- Install prompt ----
 var deferredPrompt = null;
@@ -282,5 +345,5 @@ if ('serviceWorker' in navigator) {
 // ---- Boot ----
 render();
 if (!state.currentPeriod) {
-  openSetup(true);
+  openWelcome();
 }
