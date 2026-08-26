@@ -39,13 +39,13 @@ body{
 .foot{flex:none;border-top:1px solid rgba(0,0,0,.06)}
 .top{flex:6;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;text-align:center}
 .eyebrow{font-size:13px;letter-spacing:1.6px;text-transform:uppercase;color:var(--navy);font-weight:600}
-#hero{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:64px;line-height:1.05;color:var(--clay);margin-top:6px}
+#hero{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:64px;line-height:1.05;color:var(--clay);margin-top:18px}
 #hero.over{color:var(--brick)}
-#days{font-size:15px;color:var(--muted);margin-top:8px;font-weight:500}
+#days{font-size:15px;color:var(--muted);margin-top:20px;font-weight:500}
 #bar{height:5px;border-radius:3px;background:rgba(0,0,0,.07);margin:16px 0 6px;overflow:hidden}
 #barfill{height:100%;background:var(--blush);width:0%;transition:width .3s}
 #barfill.over{background:var(--brick)}
-#progress{font-size:14px;color:var(--muted);font-weight:500;text-align:right}
+#progress{font-size:14px;color:var(--muted);font-weight:500;text-align:right;margin-bottom:40px}
 
 button{font-family:'Quicksand',sans-serif;cursor:pointer;border:none}
 .btnrow{display:flex;flex-direction:column;gap:9px;margin-top:16px;flex:none}
