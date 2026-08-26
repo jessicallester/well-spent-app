@@ -121,11 +121,13 @@ function closeSheets() {
   ['welcomeSheet', 'entrySheet', 'winSheet', 'celebrateSheet', 'setupSheet'].forEach(function (id) {
     document.getElementById(id).classList.remove('show');
   });
+  document.getElementById('phone').classList.remove('welcome-mode');
   editing = null;
 }
 
 function openWelcome() {
   closeSheets();
+  document.getElementById('phone').classList.add('welcome-mode');
   document.getElementById('welcomeSheet').classList.add('show');
 }
 
