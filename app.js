@@ -75,11 +75,17 @@ function render() {
   var over = b < 0;
 
   var hero = document.getElementById('hero');
-  hero.textContent = money(b);
-  hero.className = over ? 'over' : '';
-  document.getElementById('eyebrow').textContent = over ? 'Over by' : 'Variable Spend Left';
-
+  var eyebrowEl = document.getElementById('eyebrow');
   var daysEl = document.getElementById('days');
+  var progressEl = document.getElementById('progress');
+  var heroPanel = document.getElementById('heroPanel');
+
+  hero.textContent = money(b);
+  hero.classList.toggle('over', over);
+  eyebrowEl.textContent = over ? 'Over by' : 'Variable Spend Left';
+  eyebrowEl.classList.toggle('over', over);
+  heroPanel.classList.toggle('over', over);
+
   if (!p) {
     daysEl.textContent = '—';
   } else {
@@ -89,13 +95,15 @@ function render() {
       d === 1 ? 'Payday is tomorrow' :
       d === 0 ? 'Payday is today' : 'Payday has passed';
   }
+  daysEl.classList.toggle('over', over);
 
   var startAmount = p ? p.startingAmount : 0;
-  document.getElementById('progress').textContent = p ? (money(spent()) + ' of ' + money(startAmount) + ' spent') : '—';
+  progressEl.textContent = p ? (money(spent()) + ' of ' + money(startAmount) + ' spent') : '—';
+  progressEl.classList.toggle('over', over);
 
   var fill = document.getElementById('barfill');
   fill.style.width = p ? Math.min(100, Math.max(0, spent() / startAmount * 100)) + '%' : '0%';
-  fill.className = over ? 'over' : '';
+  fill.classList.toggle('over', over);
 
   var entries = p ? p.entries : [];
   var n = entries.length;
