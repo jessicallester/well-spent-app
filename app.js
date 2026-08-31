@@ -6,7 +6,7 @@ function load() {
     var raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch (e) {}
-  return { currentPeriod: null, merchantMemory: [], lastStartingAmount: null };
+  return { currentPeriod: null, merchantMemory: [], lastStartingAmount: null, installDismissed: false };
 }
 
 function save() {
@@ -155,7 +155,7 @@ function openEntry(type, id) {
     var e = state.currentPeriod.entries.find(function (x) { return x.id === id; });
     if (e) {
       editing = e;
-      a.value = e.amount;
+      a.value = '$' + e.amount;
       ds.value = e.description;
       document.getElementById('entryTitle').textContent = 'Edit entry';
       document.getElementById('delBtn').style.display = 'block';
@@ -174,7 +174,7 @@ function openEntry(type, id) {
 }
 
 function saveEntry() {
-  var v = parseFloat(document.getElementById('amt').value);
+  var v = parseAmount(document.getElementById('amt'));
   if (!v || v <= 0) {
     document.getElementById('amt').style.borderColor = 'var(--brick)';
     return;
@@ -237,12 +237,13 @@ function openSetup(isFirstRun) {
     title.textContent = "Let's get started";
     cancelBtn.style.display = 'none';
     note.textContent = 'Your data lives only on this device — clearing browser data will erase it.';
-    startAmt.value = state.lastStartingAmount || '';
+    startAmt.value = state.lastStartingAmount ? '$' + state.lastStartingAmount : '';
   } else {
     title.textContent = 'New pay period';
     cancelBtn.style.display = 'block';
     note.textContent = 'This clears everything from the last period. Your data lives only on this device — clearing browser data will erase it.';
-    startAmt.value = state.currentPeriod ? state.currentPeriod.startingAmount : (state.lastStartingAmount || '');
+    var prefillAmount = state.currentPeriod ? state.currentPeriod.startingAmount : state.lastStartingAmount;
+    startAmt.value = prefillAmount ? '$' + prefillAmount : '';
   }
   document.getElementById('payday').value = addDays(14);
   document.getElementById('setupSheet').classList.add('show');
@@ -250,7 +251,7 @@ function openSetup(isFirstRun) {
 }
 
 function startPeriod() {
-  var v = parseFloat(document.getElementById('startAmt').value);
+  var v = parseAmount(document.getElementById('startAmt'));
   if (!v || v <= 0) {
     document.getElementById('startAmt').style.borderColor = 'var(--brick)';
     return;
@@ -300,14 +301,18 @@ function celebrateNewPeriod() {
   }, 1800);
 }
 
-// ---- Amount inputs: digits and at most one decimal point ----
+// ---- Amount inputs: blank until typed, then "$" + digits with at most one decimal point ----
 function sanitizeAmountInput(el) {
   var v = el.value.replace(/[^0-9.]/g, '');
   var firstDot = v.indexOf('.');
   if (firstDot !== -1) {
     v = v.slice(0, firstDot + 1) + v.slice(firstDot + 1).replace(/\./g, '');
   }
-  el.value = v;
+  el.value = v ? '$' + v : '';
+}
+
+function parseAmount(el) {
+  return parseFloat(el.value.replace(/[^0-9.]/g, ''));
 }
 
 function bindAmountInput(el) {
@@ -338,6 +343,7 @@ function isStandalone() {
 
 var deferredPrompt = null;
 var installBtn = document.getElementById('installBtn');
+var installDismiss = document.getElementById('installDismiss');
 
 if (isIos() && !isStandalone()) {
   installBtn.style.display = 'inline-block';
@@ -349,18 +355,30 @@ if (isIos() && !isStandalone()) {
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault();
     deferredPrompt = e;
-    installBtn.style.display = 'inline-block';
+    if (!state.installDismissed) {
+      installBtn.style.display = 'inline-block';
+      installDismiss.style.display = 'inline-block';
+    }
   });
-  installBtn.addEventListener('click', function () {
+  function triggerInstall() {
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then(function () {
       deferredPrompt = null;
       installBtn.style.display = 'none';
+      installDismiss.style.display = 'none';
     });
+  }
+  installBtn.addEventListener('click', triggerInstall);
+  installDismiss.addEventListener('click', function () {
+    state.installDismissed = true;
+    save();
+    installBtn.style.display = 'none';
+    installDismiss.style.display = 'none';
   });
   window.addEventListener('appinstalled', function () {
     installBtn.style.display = 'none';
+    installDismiss.style.display = 'none';
   });
 }
 

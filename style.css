@@ -26,6 +26,10 @@ body{
   color:var(--navy);font-family:'Quicksand',sans-serif;font-size:14px;font-weight:600;
   padding:6px 12px;border-radius:99px;
 }
+.installDismiss{
+  background:none;border:none;color:var(--muted);font-size:19px;line-height:1;
+  padding:4px 4px 4px 8px;cursor:pointer;flex:none;
+}
 
 /* ---------- screens: everything below the brand header, sheets cover only this ---------- */
 #screens{flex:1;min-height:0;position:relative;display:flex;flex-direction:column}
