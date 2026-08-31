@@ -131,10 +131,13 @@ input.big{
 
 /* ---------- welcome screen ---------- */
 #welcomewrap{text-align:center;margin:auto 0}
-.welcomemark{width:64px;height:64px;margin-bottom:14px}
-#welcomeTitle{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:26px;color:var(--clay);margin-top:10px;white-space:nowrap}
-#welcomewrap .eyebrow{margin-top:10px}
-#welcomeBody{font-size:16px;color:var(--cocoa);line-height:1.6;margin-top:14px;padding:0 6px}
+.welcomemark{width:52px;height:52px;margin-bottom:22px;display:block;margin-left:auto;margin-right:auto}
+#welcomeKicker{font-size:14px;color:var(--muted);font-weight:500}
+#welcomeTitle{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:26px;color:var(--clay);margin-top:14px}
+#welcomeTitle span{display:block}
+#welcomewrap .eyebrow{margin-top:18px}
+#welcomeDivider{width:44px;height:1px;background:rgba(27,58,92,.25);margin:20px auto}
+#welcomeBody{font-size:16px;color:var(--cocoa);line-height:1.6;padding:0 6px;margin-top:0}
 
 /* ---------- iOS manual install instructions ---------- */
 #iosInstallWrap{text-align:center;margin:auto 0}
