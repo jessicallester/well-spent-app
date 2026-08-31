@@ -126,7 +126,7 @@ function render() {
 
 // ---- Sheets ----
 function closeSheets() {
-  ['welcomeSheet', 'entrySheet', 'winSheet', 'celebrateSheet', 'setupSheet'].forEach(function (id) {
+  ['welcomeSheet', 'entrySheet', 'winSheet', 'celebrateSheet', 'setupSheet', 'iosInstallSheet'].forEach(function (id) {
     document.getElementById(id).classList.remove('show');
   });
   document.getElementById('phone').classList.remove('welcome-mode');
@@ -214,8 +214,8 @@ function openWin() {
   } else if (near) {
     n.className = 'target'; line.textContent = 'You ended right on target';
     sub.textContent = b > 0
-      ? money(b) + ' left over — that\'s about as close as it gets.'
-      : money(b) + ' over. Don\'t sweat the small stuff — that\'s about as close as it gets.';
+      ? money(b) + ' left over — Nice job!'
+      : money(b) + ' over. Don\'t sweat the small stuff — Nice job!';
   } else if (b < 0) {
     n.className = 'over'; line.textContent = 'You went over by';
     sub.textContent = 'It happens. Next period is a fresh start.';
@@ -327,23 +327,42 @@ document.getElementById('chips').addEventListener('click', function (e) {
 });
 
 // ---- Install prompt ----
+// iOS Safari never fires beforeinstallprompt -- there is no programmatic
+// install API on iOS at all, so it needs its own manual-instructions path.
+function isIos() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+}
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+}
+
 var deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', function (e) {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('installBtn').style.display = 'inline-block';
-});
-document.getElementById('installBtn').addEventListener('click', function () {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(function () {
-    deferredPrompt = null;
-    document.getElementById('installBtn').style.display = 'none';
+var installBtn = document.getElementById('installBtn');
+
+if (isIos() && !isStandalone()) {
+  installBtn.style.display = 'inline-block';
+  installBtn.addEventListener('click', function () {
+    closeSheets();
+    document.getElementById('iosInstallSheet').classList.add('show');
   });
-});
-window.addEventListener('appinstalled', function () {
-  document.getElementById('installBtn').style.display = 'none';
-});
+} else {
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'inline-block';
+  });
+  installBtn.addEventListener('click', function () {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function () {
+      deferredPrompt = null;
+      installBtn.style.display = 'none';
+    });
+  });
+  window.addEventListener('appinstalled', function () {
+    installBtn.style.display = 'none';
+  });
+}
 
 // ---- Service worker ----
 if ('serviceWorker' in navigator) {
