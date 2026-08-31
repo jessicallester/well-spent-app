@@ -221,7 +221,7 @@ function openWin() {
     sub.textContent = 'It happens. Next period is a fresh start.';
   } else {
     n.className = ''; line.textContent = 'You finished with';
-    sub.textContent = "That's " + money(b) + " you didn't spend. Nice work.";
+    sub.textContent = "That's " + money(b) + " you didn't spend. Nice work!";
   }
   document.getElementById('winSheet').classList.add('show');
 }
