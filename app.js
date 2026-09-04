@@ -126,7 +126,7 @@ function render() {
 
 // ---- Sheets ----
 function closeSheets() {
-  ['welcomeSheet', 'entrySheet', 'winSheet', 'celebrateSheet', 'setupSheet', 'iosInstallSheet'].forEach(function (id) {
+  ['welcomeSheet', 'entrySheet', 'winSheet', 'celebrateSheet', 'setupSheet', 'iosInstallSheet', 'editBudgetSheet'].forEach(function (id) {
     document.getElementById(id).classList.remove('show');
   });
   document.getElementById('phone').classList.remove('welcome-mode');
@@ -274,6 +274,31 @@ function startPeriod() {
   }
 }
 
+// ---- Edit this period's budget mid-period (entries untouched) ----
+function openEditBudget() {
+  if (!state.currentPeriod) return;
+  closeSheets();
+  var el = document.getElementById('editBudgetAmt');
+  el.value = '$' + state.currentPeriod.startingAmount;
+  el.style.borderColor = '';
+  document.getElementById('editBudgetSheet').classList.add('show');
+  setTimeout(function () { el.focus(); }, 60);
+}
+
+function saveBudgetEdit() {
+  var el = document.getElementById('editBudgetAmt');
+  var v = parseAmount(el);
+  if (!v || v <= 0) {
+    el.style.borderColor = 'var(--brick)';
+    return;
+  }
+  state.currentPeriod.startingAmount = v;
+  state.lastStartingAmount = v;
+  save();
+  closeSheets();
+  render();
+}
+
 // ---- New-period celebration ----
 function spawnConfetti() {
   var layer = document.getElementById('confettiLayer');
@@ -324,6 +349,7 @@ function bindAmountInput(el) {
 
 bindAmountInput(document.getElementById('amt'));
 bindAmountInput(document.getElementById('startAmt'));
+bindAmountInput(document.getElementById('editBudgetAmt'));
 
 document.getElementById('chips').addEventListener('click', function (e) {
   var chip = e.target.closest('.chip');

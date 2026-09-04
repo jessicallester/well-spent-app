@@ -46,7 +46,7 @@
     <div class="top">
       <div class="heroPanel" id="heroPanel">
         <div class="eyebrow" id="eyebrow">Variable Spend Left</div>
-        <div id="hero">$0</div>
+        <div id="hero" onclick="openEditBudget()">$0</div>
         <div id="days">—</div>
       </div>
       <div id="bar"><div id="barfill"></div></div>
@@ -92,7 +92,8 @@
         <h1 id="welcomeTitle"><span>Well Spent</span><span>Envelope</span></h1>
         <div class="eyebrow">Your Variable Spend Tracker</div>
         <div id="welcomeDivider"></div>
-        <p id="welcomeBody">No syncing, no categories — just the number that matters.</p>
+        <p id="welcomeBody">For everything that isn't a bill or savings — food, gas, coffee, etc.</p>
+        <p id="welcomeBody2">Know what's left until payday.</p>
       </div>
       <div class="winfoot">
         <button class="primary" style="width:100%" onclick="openSetup(true)">Get Started</button>
@@ -150,13 +151,24 @@
     <!-- Setup -->
     <div class="sheet" id="setupSheet">
       <h2 id="setupTitle">New pay period</h2>
-      <label>How much can you spend?</label>
+      <label>How much can you spend this period?</label>
       <input class="big" id="startAmt" type="text" inputmode="decimal" placeholder="450">
+      <div class="fieldHelper">Not counting bills or savings — just your everyday spending.</div>
       <label>Next payday</label>
       <input id="payday" type="date">
       <button class="primary" style="width:100%" onclick="startPeriod()">Start</button>
       <div class="note" id="setupNote">This clears everything from the last period.</div>
       <button class="link" id="setupCancelBtn" onclick="closeSheets()">Cancel</button>
+    </div>
+
+    <!-- Edit this period's amount mid-period, without touching entries -->
+    <div class="sheet" id="editBudgetSheet">
+      <h2>Edit this period's amount</h2>
+      <label>How much can you spend this period?</label>
+      <input class="big" id="editBudgetAmt" type="text" inputmode="decimal" placeholder="450">
+      <div class="fieldHelper">This won't affect anything you've already logged.</div>
+      <button class="primary" style="width:100%" onclick="saveBudgetEdit()">Save</button>
+      <button class="link" onclick="closeSheets()">Cancel</button>
     </div>
 
   </div>
