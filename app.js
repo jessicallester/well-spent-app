@@ -82,7 +82,7 @@ function render() {
 
   hero.textContent = money(b);
   hero.classList.toggle('over', over);
-  eyebrowEl.textContent = over ? 'Over by' : 'Variable Spend Left';
+  eyebrowEl.textContent = over ? 'Over by' : 'Everyday Spend Left';
   eyebrowEl.classList.toggle('over', over);
   heroPanel.classList.toggle('over', over);
 
