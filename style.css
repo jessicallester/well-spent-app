@@ -80,15 +80,17 @@ button{font-family:'Quicksand',sans-serif;cursor:pointer;border:none}
   padding:20px 0 9px;display:flex;justify-content:space-between;align-items:baseline;
   border-bottom:1px solid rgba(0,0,0,.08);
 }
-.listhead .t{font-size:13px;letter-spacing:1.6px;text-transform:uppercase;color:var(--navy);font-weight:600}
-.listhead .c{font-size:13px;color:var(--muted);font-weight:600}
+.listhead .t{font-size:15px;color:var(--navy);font-weight:600}
+.listhead .c{font-size:15px;color:var(--muted);font-weight:600}
 .row{
   display:flex;justify-content:space-between;align-items:center;
   padding:13px 2px;border-bottom:1px solid rgba(0,0,0,.05);cursor:pointer;
 }
 .row:active{background:rgba(239,183,154,.2)}
-.row .name{font-size:17px;font-weight:500}
-.row .amt{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.row .name{font-size:15px;font-weight:500}
+.row .amt{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.dayHeader{font-size:15px;color:var(--muted);font-weight:600;margin-top:14px;margin-bottom:2px}
+.dayHeader:first-child{margin-top:0}
 .row .amt.in{color:var(--fern)}
 .empty{font-size:16px;color:var(--muted);padding:22px 2px;line-height:1.6}
 #fade{

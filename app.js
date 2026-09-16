@@ -58,6 +58,27 @@ function daysLeft() {
   return Math.round((payday - today) / 86400000);
 }
 
+var MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+function ordinalSuffix(n) {
+  if (n % 10 === 1 && n !== 11) return 'st';
+  if (n % 10 === 2 && n !== 12) return 'nd';
+  if (n % 10 === 3 && n !== 13) return 'rd';
+  return 'th';
+}
+
+function relativeEntryDate(iso) {
+  var d = new Date(iso);
+  var day = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  var diffDays = Math.round((today - day) / 86400000);
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  var date = d.getDate();
+  return MONTH_NAMES[d.getMonth()] + ' ' + date + ordinalSuffix(date);
+}
+
 function rememberMerchant(desc) {
   if (!desc) return;
   var idx = state.merchantMemory.findIndex(function (m) {
@@ -113,11 +134,28 @@ function render() {
   if (!n) {
     list.innerHTML = '<div class="empty">Nothing logged yet. Tap + Add Spend when you buy something.</div>';
   } else {
-    list.innerHTML = entries.slice().reverse().map(function (e) {
-      return '<div class="row" onclick="openEntry(\'' + e.type + '\',\'' + e.id + '\')">' +
-        '<div class="name">' + (e.description || 'No note') + '</div>' +
-        '<div class="amt ' + (e.type === 'money_in' ? 'in' : '') + '">' + (e.type === 'money_in' ? '+' : '−') + money(e.amount) + '</div>' +
-      '</div>';
+    // Group newest-first entries by calendar day, so both the day groups
+    // and the entries inside each group read most-recent-first.
+    var groups = [];
+    var groupByKey = {};
+    entries.slice().reverse().forEach(function (e) {
+      var d = new Date(e.createdAt);
+      var key = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate();
+      if (!groupByKey[key]) {
+        groupByKey[key] = { label: relativeEntryDate(e.createdAt), items: [] };
+        groups.push(groupByKey[key]);
+      }
+      groupByKey[key].items.push(e);
+    });
+
+    list.innerHTML = groups.map(function (g) {
+      return '<div class="dayHeader">' + g.label + '</div>' +
+        g.items.map(function (e) {
+          return '<div class="row" onclick="openEntry(\'' + e.type + '\',\'' + e.id + '\')">' +
+            '<div class="name">' + (e.description || 'No note') + '</div>' +
+            '<div class="amt ' + (e.type === 'money_in' ? 'in' : '') + '">' + (e.type === 'money_in' ? '+' : '−') + money(e.amount) + '</div>' +
+          '</div>';
+        }).join('');
     }).join('') + '<div style="height:26px"></div>';
   }
 
